@@ -1,0 +1,33 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Users\\ksuna\\source\\repos\\PathwayFinding\\PathwayFinding\\wwwroot\\css\\site.css",
+      "PackagePath": "staticwebassets\\css\\site.css"
+    },
+    {
+      "Id": "C:\\Users\\ksuna\\source\\repos\\PathwayFinding\\PathwayFinding\\wwwroot\\css\\style.css",
+      "PackagePath": "staticwebassets\\css\\style.css"
+    },
+    {
+      "Id": "C:\\Users\\ksuna\\source\\repos\\PathwayFinding\\PathwayFinding\\wwwroot\\js\\PathwayFinding.js",
+      "PackagePath": "staticwebassets\\js\\PathwayFinding.js"
+    },
+    {
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.PathwayFinding.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.build.PathwayFinding.props",
+      "PackagePath": "build\\PathwayFinding.props"
+    },
+    {
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.buildMultiTargeting.PathwayFinding.props",
+      "PackagePath": "buildMultiTargeting\\PathwayFinding.props"
+    },
+    {
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.buildTransitive.PathwayFinding.props",
+      "PackagePath": "buildTransitive\\PathwayFinding.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

@@ -1,0 +1,71 @@
+{
+  "Version": 1,
+  "Hash": "3R7mpipo2hAlJpgYf0crugsWwAw/vRddtQg29YAWvWg=",
+  "Source": "PathwayFinding",
+  "BasePath": "_content/PathwayFinding",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "PathwayFinding\\wwwroot",
+      "Source": "PathwayFinding",
+      "ContentRoot": "C:\\Users\\ksuna\\source\\repos\\PathwayFinding\\PathwayFinding\\wwwroot\\",
+      "BasePath": "_content/PathwayFinding",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "C:\\Users\\ksuna\\source\\repos\\PathwayFinding\\PathwayFinding\\wwwroot\\css\\site.css",
+      "SourceId": "PathwayFinding",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\ksuna\\source\\repos\\PathwayFinding\\PathwayFinding\\wwwroot\\",
+      "BasePath": "_content/PathwayFinding",
+      "RelativePath": "css/site.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\css\\site.css"
+    },
+    {
+      "Identity": "C:\\Users\\ksuna\\source\\repos\\PathwayFinding\\PathwayFinding\\wwwroot\\css\\style.css",
+      "SourceId": "PathwayFinding",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\ksuna\\source\\repos\\PathwayFinding\\PathwayFinding\\wwwroot\\",
+      "BasePath": "_content/PathwayFinding",
+      "RelativePath": "css/style.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\css\\style.css"
+    },
+    {
+      "Identity": "C:\\Users\\ksuna\\source\\repos\\PathwayFinding\\PathwayFinding\\wwwroot\\js\\PathwayFinding.js",
+      "SourceId": "PathwayFinding",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\ksuna\\source\\repos\\PathwayFinding\\PathwayFinding\\wwwroot\\",
+      "BasePath": "_content/PathwayFinding",
+      "RelativePath": "js/PathwayFinding.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\js\\PathwayFinding.js"
+    }
+  ]
+}

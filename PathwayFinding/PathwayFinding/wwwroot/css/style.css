@@ -1,0 +1,65 @@
+﻿body {
+}
+
+button {
+    display: inline;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 10px 20px;
+    border-radius: 0;
+    border: none;
+    color: #fff;
+    background-color: #eb6100;
+}
+
+button:hover {
+    color: #fff;
+    background: #f56500;
+    cursor: pointer;
+}
+
+.grid-template {
+    width: 100%;
+}
+
+.grid-template .grid-row {
+    display: flex;
+    width: 100%;
+}
+
+.grid-cell {
+    display: block;
+    border: 0.5px solid #ffffff;
+    height: 30px;
+    width: 30px;
+    background-color: #ededed;
+}
+
+.grid-cell:hover {
+    cursor: pointer;
+    background-color: #b8b8b8;
+}
+
+.barrier {
+    background-color: #000000;
+}
+
+.open {
+    background-color: #B3FFFF;
+}
+
+.closed {
+    background-color: #12E6E6;
+}
+
+.path {
+    background-color: #FF1515;
+}
+
+.start {
+    background-color: #f02684;
+}
+
+.end {
+    background-color: #7026f0;
+}

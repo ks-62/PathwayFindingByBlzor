@@ -1,0 +1,272 @@
+﻿@page "/"
+
+@inject IJSRuntime JSRuntime;
+
+<button @onclick="()=> StartFinding()">START</button>
+
+<div class="grid-template">
+    @for (int row = 0; row < cells.GetLength(0); row++)
+    {
+        <div class="grid-row">
+            @for (int col = 0; col < cells.GetLength(1); col++)
+            {
+                int rowIndex = row;
+                int colIndex = col;
+                string cellId = $"{row}_{col}";
+                <span 
+                    class="@cells[rowIndex, colIndex].ElementClassName" 
+                    id="@cells[rowIndex, colIndex].ElementId" 
+                    @onmousedown="() => BarrierMouseDown(cells[rowIndex, colIndex])" 
+                    @onmousemove="() => BarrierMouseMove(cells[rowIndex, colIndex])" 
+                    @onmouseup="() => BarrierMouseUp(cells[rowIndex, colIndex])">
+                </span>
+            }
+        </div>
+    }
+</div>
+
+@code {
+
+    static int GRID_HEIGHT = 20;
+    static int GRID_WIDTH = 40;
+
+    string CELL_CLASS_NAME = "grid-cell";
+
+    Cell.CELL_STATUS cellStatus;
+    bool mouseDown = false;
+
+    Cell[,] cells = new Cell[GRID_HEIGHT, GRID_WIDTH];
+
+    Cell start;
+    Cell end;
+    List<string> BarrierCells = new List<String>();
+
+    protected override void OnInitialized()
+    {
+        MakeGrid();
+        cellStatus = Cell.CELL_STATUS.START;
+    }
+
+    public void MakeGrid()
+    {
+        for(int row = 0; row < GRID_HEIGHT; row++)
+        {
+            for(int col = 0; col < GRID_WIDTH; col++)
+            {
+                cells[row, col] = new Cell(row, col);
+            }
+        }
+    }
+
+    public void BarrierMouseDown(Cell e)
+    {
+
+        switch(cellStatus)
+        {
+            case Cell.CELL_STATUS.START:
+                e.Status = cellStatus;
+                JSRuntime.InvokeVoidAsync("MakeStart", e.ElementId);
+                start = e;
+                cellStatus = Cell.CELL_STATUS.END;
+                break;
+
+            case Cell.CELL_STATUS.END:
+                e.Status = cellStatus;
+                JSRuntime.InvokeVoidAsync("MakeEnd", e.ElementId);
+                end = e;
+                cellStatus = Cell.CELL_STATUS.BARRIER;
+                break;
+
+            case Cell.CELL_STATUS.BARRIER:
+                mouseDown = true;
+                e.Status = cellStatus;
+                JSRuntime.InvokeVoidAsync("MakeBarrier", e.ElementId);
+                BarrierCells.Add(e.ElementId);
+                cellStatus = Cell.CELL_STATUS.BARRIER;
+                break;
+        }
+
+
+    }
+
+    public void BarrierMouseMove(Cell e)
+    {
+        if (!mouseDown || cellStatus != Cell.CELL_STATUS.BARRIER)
+        {
+            return;
+        }
+
+        e.Status = cellStatus;
+        JSRuntime.InvokeVoidAsync("MakeBarrier", e.ElementId);
+        BarrierCells.Add(e.ElementId);
+        cellStatus = Cell.CELL_STATUS.BARRIER;
+    }
+
+    public void BarrierMouseUp(Cell e)
+    {
+
+        if (!mouseDown || cellStatus != Cell.CELL_STATUS.BARRIER)
+        {
+            return;
+        }
+
+        mouseDown = false;
+    }
+
+    public void StartFinding()
+    {
+
+        for (int row = 0; row < cells.GetLength(0); row++)
+        {
+            for (int col = 0; col < cells.GetLength(1); col++)
+            {
+                UpdateNeighbors(cells[row, col]);
+            }
+        }
+
+        start = cells[start.Row, start.Col];
+        end = cells[end.Row, end.Col];
+
+        algorithm(start, end);
+    }
+
+    private void UpdateNeighbors(Cell targetCell)
+    {
+
+        var neighborsList = new List<Cell>();
+
+        //DOWN
+        if (targetCell.Row < GRID_HEIGHT - 1)
+        {
+            var downCell = cells[targetCell.Row + 1, targetCell.Col];
+            if(downCell.Status != Cell.CELL_STATUS.BARRIER)
+            {
+                neighborsList.Add(downCell);
+            }
+        }
+
+        //UP
+        if (targetCell.Row > 0)
+        {
+            var upCell = cells[targetCell.Row - 1, targetCell.Col];
+            if(upCell.Status != Cell.CELL_STATUS.BARRIER)
+            {
+                neighborsList.Add(upCell);
+            }
+        }
+
+        //RIGHT
+        if (targetCell.Col < GRID_WIDTH - 1)
+        {
+            var rightCell = cells[targetCell.Row, targetCell.Col + 1];
+            if(rightCell.Status != Cell.CELL_STATUS.BARRIER)
+            {
+                neighborsList.Add(rightCell);
+            }
+        }
+
+        //LEFT
+        if (targetCell.Col > 0)
+        {
+            var leftCell = cells[targetCell.Row, targetCell.Col - 1];
+            if (leftCell.Status != Cell.CELL_STATUS.BARRIER)
+            {
+                neighborsList.Add(leftCell);
+            }
+        }
+
+        targetCell.Neighbors = neighborsList;
+
+    }
+
+    private void ReconstructPath(Dictionary<string, string> cameFrom, Cell current)
+    {
+        string currentEId = current.ElementId;
+        while (cameFrom.ContainsKey(currentEId))
+        {
+            currentEId = cameFrom[currentEId];
+            JSRuntime.InvokeVoidAsync("MakePath", currentEId);
+
+        }
+    }
+
+    //get the distance between Cell1 and Cell2
+    private int h(Cell p1, Cell p2)
+    {
+        int x1 = p1.Row;
+        int y1 = p1.Col;
+        int x2 = p2.Row;
+        int y2 = p2.Col;
+        int calcResult = Math.Abs(x1 - x2) + Math.Abs(y1 - y2);
+        return calcResult;
+    }
+
+    private void algorithm(Cell start, Cell end)
+    {
+        int count = 0;
+        var openSet = new PriorityQueue<Cell, int>();
+        openSet.Enqueue(start, 0);
+        var cameFrom = new Dictionary<string, string>();
+
+        var gScore = new int[GRID_HEIGHT, GRID_WIDTH];
+        for (int row = 0; row < gScore.GetLength(0); row++)
+        {
+            for (int col = 0; col < gScore.GetLength(1); col++)
+            {
+                gScore[row, col] = GRID_HEIGHT * GRID_WIDTH;
+            }
+        }
+        gScore[start.Row, start.Col] = 0;
+        var fScore = new int[GRID_HEIGHT, GRID_WIDTH];
+        fScore[start.Row, start.Col] = h(start, end);
+
+        //to check whether the Cell is in openSet or not
+        var openSetHash = new List<Cell>();
+        openSetHash.Add(start);
+
+        while (openSet.Count != 0)
+        {
+            Cell current = openSet.Dequeue();
+            openSetHash.Remove(start);
+
+            if (current.ElementId == end.ElementId)
+            {
+                ReconstructPath(cameFrom, end);
+                JSRuntime.InvokeVoidAsync("MakeEnd", end.ElementId);
+                end.Status = Cell.CELL_STATUS.END;
+                return;
+            }
+
+            foreach (Cell neighbor in current.Neighbors)
+            {
+                var neighborInCells = cells[neighbor.Row, neighbor.Col];
+                int tempGScore = gScore[current.Row, current.Col] + 1;
+                if (tempGScore < gScore[neighborInCells.Row, neighborInCells.Col])
+                {
+                    if (!cameFrom.ContainsKey(neighbor.ElementId)) cameFrom.Add(neighbor.ElementId, current.ElementId);
+
+                    gScore[neighborInCells.Row, neighborInCells.Col] = tempGScore;
+                    fScore[neighborInCells.Row, neighborInCells.Col] = tempGScore + h(neighborInCells, end);
+
+                    if (!openSetHash.Contains(neighborInCells))
+                    {
+                        count++;
+                        openSet.Enqueue(neighborInCells, fScore[neighborInCells.Row, neighborInCells.Col]);
+                        openSetHash.Add(neighborInCells);
+                        JSRuntime.InvokeVoidAsync("MakeOpen", neighborInCells.ElementId);
+                        neighborInCells.Status = Cell.CELL_STATUS.OPEN;
+                    }
+                }
+            }
+
+            if (current.ElementId != start.ElementId)
+            {
+                JSRuntime.InvokeVoidAsync("MakeClosed", current.ElementId);
+                current.Status = Cell.CELL_STATUS.CLOSED;
+            }
+
+        }
+
+    }
+
+}
